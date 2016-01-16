@@ -17,10 +17,7 @@
 @end
 
 @implementation WBOAuthViewController
-static NSString *access_token_key = @"access_token_key";
-static NSString *appKey = @"156507214";
-static NSString *appSecret = @"337170c0cf293b9e244bb049b23e2aec";
-static NSString *redirect_uri = @"https://api.weibo.com/oauth2/default.html";
+
 
 -(UIWebView *)webView{
     if (_webView == nil) {

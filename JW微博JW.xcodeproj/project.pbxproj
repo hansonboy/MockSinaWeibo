@@ -84,6 +84,7 @@
 		CBD5C57B1C45548C008ABBDA /* WBEmotion.m in Sources */ = {isa = PBXBuildFile; fileRef = CBD5C57A1C45548C008ABBDA /* WBEmotion.m */; };
 		CBDDA4DE1C489D6A0072D714 /* WBEmotionTool2.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDDA4DD1C489D6A0072D714 /* WBEmotionTool2.m */; };
 		CBDDA4E11C48B3D40072D714 /* WBEmotionTool.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDDA4E01C48B3D40072D714 /* WBEmotionTool.m */; };
+		CBDDA4E41C4A22090072D714 /* Constant.m in Sources */ = {isa = PBXBuildFile; fileRef = CBDDA4E31C4A22090072D714 /* Constant.m */; };
 		CBE9A0B81C22554E00F7C656 /* WBAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE9A0B71C22554E00F7C656 /* WBAccount.m */; };
 		CBE9A0D11C22564100F7C656 /* MJDictionaryCache.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE9A0BB1C22564100F7C656 /* MJDictionaryCache.m */; };
 		CBE9A0D21C22564100F7C656 /* MJExtensionConst.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE9A0BE1C22564100F7C656 /* MJExtensionConst.m */; };
@@ -272,6 +273,8 @@
 		CBDDA4DD1C489D6A0072D714 /* WBEmotionTool2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBEmotionTool2.m; sourceTree = "<group>"; };
 		CBDDA4DF1C48B3D40072D714 /* WBEmotionTool.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBEmotionTool.h; sourceTree = "<group>"; };
 		CBDDA4E01C48B3D40072D714 /* WBEmotionTool.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBEmotionTool.m; sourceTree = "<group>"; };
+		CBDDA4E21C4A22090072D714 /* Constant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Constant.h; sourceTree = "<group>"; };
+		CBDDA4E31C4A22090072D714 /* Constant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Constant.m; sourceTree = "<group>"; };
 		CBE9A0B61C22554E00F7C656 /* WBAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBAccount.h; sourceTree = "<group>"; };
 		CBE9A0B71C22554E00F7C656 /* WBAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBAccount.m; sourceTree = "<group>"; };
 		CBE9A0BA1C22564100F7C656 /* MJDictionaryCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MJDictionaryCache.h; sourceTree = "<group>"; };
@@ -586,6 +589,8 @@
 		CB707BCF1C18216B00969F7B /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				CBDDA4E21C4A22090072D714 /* Constant.h */,
+				CBDDA4E31C4A22090072D714 /* Constant.m */,
 			);
 			path = Other;
 			sourceTree = "<group>";
@@ -1066,6 +1071,7 @@
 				CB7B89541C2A940300FDF4DC /* SDWebImageCompat.m in Sources */,
 				CBE9A0D81C22564100F7C656 /* NSObject+MJCoding.m in Sources */,
 				CBDDA4E11C48B3D40072D714 /* WBEmotionTool.m in Sources */,
+				CBDDA4E41C4A22090072D714 /* Constant.m in Sources */,
 				CB26809B1C1969D90066DF04 /* WBSearchBar.m in Sources */,
 				CBE9A0F81C22B31000F7C656 /* NSArray+Log.m in Sources */,
 				CB6676061C1F211D0007476E /* AFNetworkReachabilityManager.m in Sources */,

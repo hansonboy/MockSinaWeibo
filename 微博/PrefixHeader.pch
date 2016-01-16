@@ -26,11 +26,11 @@
 #import "NSDate+Extension.h"
 #import "AFNetworking.h"
 #import "MBProgressHUD+MJ.h"
-//#import "UIImage+FixOrientation.h"
 #import "WBButton.h"
 #import "NSString+Emoji.h"
 #import "UIImage+Extension.h"
 #import "UITextView+Extension.h"
+#import "Constant.h"
 #ifdef  DEBUG
 #define JWLog(xx, ...)  NSLog(@"%s(%d): " xx, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
@@ -39,11 +39,8 @@
 #define kWBEmotionTool2 [[WBEmotionTool2 alloc]init]
 #define kWBEmotionTool [WBEmotionTool sharedEmotionTool]
 #define kNotificationCenter [NSNotificationCenter defaultCenter]
-#define WBEmotionButtonDidClickNotification @"WBEmotionButtonDidClickNotification"
-#define WBEmotionBackSpaceButtonClickNotification @"WBEmotionBackSpaceButtonClickNotification"
-/** 用来存储Emotion*/
-#define WBEmotionButtonUserInfoKey @"WBEmotionButtonUserInfoKey"
+
 //UIKeyboardFrameBeginUserInfoKey
 //UIKeyboardDidHideNotification
-#define kTabBarH 44
+
 #endif
