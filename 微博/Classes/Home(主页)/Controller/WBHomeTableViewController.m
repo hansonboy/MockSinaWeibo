@@ -10,7 +10,7 @@
 #import "WBPopMenu.h"
 #import "WBTestTableViewController.h"
 #import "WBAccountTool.h"
-#import "AFNetworking.h"
+#import "HttpTool.h"
 #import "WBUser.h"
 #import "WBStatus.h"
 #import "WBStatusFrame.h"
@@ -114,16 +114,15 @@
 //    JWLog();
     //   https://rm.api.weibo.com/2/remind/unread_count.json
  
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
+  
     WBAccount *account = [WBAccountTool account];
     NSString *urlStr = [NSString stringWithFormat:@"https://rm.api.weibo.com/2/remind/unread_count.json?access_token=%@&uid=%@",account.access_token,account.uid];
-    [manager GET:urlStr parameters:nil success:^(AFHTTPRequestOperation *operation, id responseObject) {
-//        JWLog(@"未读数目:%@",responseObject);
+    
+    [HttpTool get:urlStr params:nil success:^(id responseObject) {
+        //        JWLog(@"未读数目:%@",responseObject);
         [self setBadgeNumber:responseObject[@"status"]];
-//           static int i = 1;
-//        [self setBadgeNumber:@(i++)];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        JWLog(@"%@",error);
+    } failure:^(NSError *error) {
+         JWLog(@"%@",error);
     }];
 }
 -(void)setupTableView{
@@ -142,20 +141,19 @@
  *  获取用户的信息
  */
 -(void)getUserInfo{
-//    JWLog();
-    AFHTTPRequestOperationManager *manager =  [[AFHTTPRequestOperationManager alloc]init];
-    /**
+     /**
      *  account 信息的获取是在WBOAuthViewController的初始化中进行的
      */
     WBAccount *account = [WBAccountTool account];
     NSString *urlStr = [NSString stringWithFormat:@"https://api.weibo.com/2/users/show.json?access_token=%@&uid=%@",account.access_token,account.uid];
-    [manager GET:urlStr parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary* responseObject) {
-        self.user = [WBUser mj_objectWithKeyValues:responseObject];
-        account.screen_name = self.user.screen_name;
-        [WBAccountTool saveAccount:account];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        JWLog(@"%@",error);
-    }];
+    [HttpTool get:urlStr params:nil
+        success:^(id responseObject) {
+            self.user = [WBUser mj_objectWithKeyValues:responseObject];
+            account.screen_name = self.user.screen_name;
+            [WBAccountTool saveAccount:account];
+        } failure:^(NSError *error) {
+             JWLog(@"%@",error);
+        }];
     /** 获取未读更新微博数目*/
 //    NSTimer *timer = [NSTimer timerWithTimeInterval:60 target:self selector:@selector(getUnreadCount) userInfo:nil repeats:YES];
 //    [[NSRunLoop mainRunLoop]addTimer:timer forMode:NSRunLoopCommonModes];
@@ -208,20 +206,19 @@
 -(void)footerClick:(UIButton*)btn{
     btn.selected = YES;
 //    JWLog(@"正在加载中哦");
-    AFHTTPRequestOperationManager *manager =  [[AFHTTPRequestOperationManager alloc]init];
     WBAccount *account = [WBAccountTool account];
     WBStatusFrame *firstStatusF = self.statusFM.lastObject;
     NSString *urlStr = [NSString stringWithFormat:@"https://api.weibo.com/2/statuses/home_timeline.json?access_token=%@&max_id=%@",account.access_token,firstStatusF.status.idstr];
-    [manager GET:urlStr parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary* responseObject) {
+    
+    [HttpTool get:urlStr params:nil success:^(id responseObject) {
         btn.selected = NO;
         NSMutableArray *newStatus = [WBStatus mj_objectArrayWithKeyValuesArray:responseObject[@"statuses"]];
-//        JWLog(@"新加载了%d 条微博",newStatus.count);
+        //        JWLog(@"新加载了%d 条微博",newStatus.count);
         NSMutableArray *newStatusFM = [WBStatusFrame arrayWithStatusArray:newStatus];
-        
         [self.statusFM addObjectsFromArray:newStatusFM];
         [self.tableView reloadData];
         [self showNewsStatusCount:newStatusFM.count];
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+    } failure:^(NSError *error) {
         btn.selected = NO;
         JWLog(@"%@",error);
     }];
@@ -250,41 +247,41 @@
 //        [self.tableView reloadData];
 //    });
 //    return;
-    AFHTTPRequestOperationManager *manager =  [[AFHTTPRequestOperationManager alloc]init];
     WBAccount *account = [WBAccountTool account];
     WBStatusFrame *lastStatusF = self.statusFM.firstObject;
     NSString *urlStr = [NSString stringWithFormat:@"https://api.weibo.com/2/statuses/home_timeline.json?access_token=%@&since_id=%@",account.access_token,lastStatusF.status.idstr];
-    [manager GET:urlStr parameters:nil success:^(AFHTTPRequestOperation *operation, NSDictionary* responseObject) {
+    
+    [HttpTool get:urlStr params:nil success:^(id responseObject) {
         [refreshControl endRefreshing];
-//        JWLog(@"%@",responseObject);
+        //        JWLog(@"%@",responseObject);
         NSMutableArray *newStatus = [WBStatus mj_objectArrayWithKeyValuesArray:responseObject[@"statuses"]];
         
         /** 以下是进行的数组，字典，对象归档尝试，主要是加深了对与mjextesion的了解，同时归档后获取了假数据，以后没有网络，我们也可以进行测试了，而且我们的速度更快哦
-        NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-        NSString *filePath = [dir stringByAppendingPathComponent:@"bakStatus.plist"];
-        if ([NSKeyedArchiver archiveRootObject:newStatus toFile:filePath]) {
-            JWLog(@"归档成功");
-        }else JWLog(@"归档失败");
-        NSMutableArray *unarchiverObjects = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
-        NSMutableArray *keyValues = [NSObject mj_keyValuesArrayWithObjectArray:newStatus];
-        if ([keyValues writeToFile:filePath atomically:YES]) {
-            JWLog(@"数组写入成功");
-        }else JWLog(@"数组写入失败");
+         NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+         NSString *filePath = [dir stringByAppendingPathComponent:@"bakStatus.plist"];
+         if ([NSKeyedArchiver archiveRootObject:newStatus toFile:filePath]) {
+         JWLog(@"归档成功");
+         }else JWLog(@"归档失败");
+         NSMutableArray *unarchiverObjects = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
+         NSMutableArray *keyValues = [NSObject mj_keyValuesArrayWithObjectArray:newStatus];
+         if ([keyValues writeToFile:filePath atomically:YES]) {
+         JWLog(@"数组写入成功");
+         }else JWLog(@"数组写入失败");
+         
+         filePath = [dir stringByAppendingPathComponent:@"bakStatus1.plist"];
+         if ([responseObject writeToFile:filePath atomically:YES]) {
+         JWLog(@"字典写入成功");
+         }else JWLog("字典写入失败");
+         */
         
-        filePath = [dir stringByAppendingPathComponent:@"bakStatus1.plist"];
-        if ([responseObject writeToFile:filePath atomically:YES]) {
-            JWLog(@"字典写入成功");
-        }else JWLog("字典写入失败");
-        */
-        
-//        JWLog(@"新加载了%ld 条微博",newStatus.count);
+        //        JWLog(@"新加载了%ld 条微博",newStatus.count);
         NSMutableArray *newStatusFM = [WBStatusFrame arrayWithStatusArray:newStatus];
         [self showNewsStatusCount:newStatusFM.count];
         [self clearBadgeNumber];
         [self.statusFM insertObjects:newStatusFM atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, newStatusFM.count)]];
         [self.tableView reloadData];
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+
+    } failure:^(NSError *error) {
         [refreshControl endRefreshing];
         JWLog(@"%@",error);
     }];

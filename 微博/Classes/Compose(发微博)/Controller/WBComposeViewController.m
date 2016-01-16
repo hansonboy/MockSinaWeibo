@@ -15,6 +15,8 @@
 #import "WBEmotion.h"
 #import "WBEmotionKeyboard.h"
 #import "WBEmotionAttachment.h"
+#import "HttpTool.h"
+
 #define kWBComposeTitleTopFont [UIFont boldSystemFontOfSize:15]
 #define kWBComposeTitleBottomFont [UIFont systemFontOfSize:13]
 #define kPhotosViewMargin 40
@@ -133,19 +135,17 @@
          *  status	true	string	要发布的微博文本内容，必须做URLencode，内容不超过140个汉字。
          *  pic	true	binary	要上传的图片，仅支持JPEG、GIF、PNG格式，图片大小小于5M。
          */
-        AFHTTPRequestOperationManager * manager = [AFHTTPRequestOperationManager manager];
+      
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         params[@"access_token"] = [WBAccountTool account].access_token;
         params[@"status"] = self.textView.text;
-      
-        [manager POST:[NSString stringWithFormat:@"https://upload.api.weibo.com/2/statuses/upload.json"] parameters:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+        
+        [HttpTool post:@"https://upload.api.weibo.com/2/statuses/upload.json" params:params constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
             [formData appendPartWithFileData:UIImagePNGRepresentation(self.photosView.image) name:@"pic" fileName:@"图片" mimeType:@"application/octet-stream"];
-            
-        } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        } success:^(id responseObject) {
             [MBProgressHUD showSuccess:@"发布成功"];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-//            JWLog(@"%@",error);
-            [MBProgressHUD showError:@"发送失败"];
+        } failure:^(NSError *error) {
+            JWLog(@"%@",error);
         }];
     }
 }
@@ -156,16 +156,17 @@
          *  access_token	false	string	采用OAuth授权方式为必填参数，其他授权方式不需要此参数，OAuth授权后获得。
          *  status	true	string	要发布的微博文本内容，必须做URLencode，内容不超过140个汉字。
          */
-        AFHTTPRequestOperationManager * manager = [AFHTTPRequestOperationManager manager];
+      
         NSMutableDictionary *params = [NSMutableDictionary dictionary];
         params[@"access_token"] = [WBAccountTool account].access_token;
         params[@"status"] = self.textView.text;
         params[@"status"] = self.textView.fullText;
         
-        [manager POST:[NSString stringWithFormat:@"https://api.weibo.com/2/statuses/update.json"] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            [MBProgressHUD showSuccess:@"发送成功"];
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        [HttpTool post:@"https://api.weibo.com/2/statuses/update.json" params:params success:^(id responseObject) {
+              [MBProgressHUD showSuccess:@"发送成功"];
+        } failure:^(NSError *error) {
             [MBProgressHUD showError:@"发送失败"];
+            JWLog(@"%@",error);
         }];
     }
 }

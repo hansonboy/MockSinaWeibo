@@ -24,7 +24,6 @@
 #import "NSArray+Log.h"
 #import "UIImageView+WebCache.h"
 #import "NSDate+Extension.h"
-#import "AFNetworking.h"
 #import "MBProgressHUD+MJ.h"
 #import "WBButton.h"
 #import "NSString+Emoji.h"

@@ -7,7 +7,7 @@
 //
 
 #import "WBOAuthViewController.h"
-#import "AFNetworking.h"
+#import "HttpTool.h"
 #import "WMTabBarController.h"
 #import "WBAccountTool.h"
 #import "MBProgressHUD+MJ.h"
@@ -54,8 +54,7 @@
     [MBProgressHUD hideHUD];
 }
 -(BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
-    //    JWLog(@"%@",request.URL);
-    NSString *code = [self getCode:request];
+     NSString *code = [self getCode:request];
     if (code.length != 0) {
         JWLog(@"code----%@",code);
         [self getAccess_token:code];
@@ -80,42 +79,20 @@
     params[@"grant_type"] = @"authorization_code";
     params[@"redirect_uri"] = redirect_uri;
     params[@"code"] = code;
-#pragma mark - AFNetworking
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    [manager POST:@"https://api.weibo.com/oauth2/access_token" parameters:params success:^(AFHTTPRequestOperation *operation, NSDictionary* responseObject) {
-        
-        WBAccount *account = [WBAccount mj_objectWithKeyValues:responseObject];
-        JWLog(@"%@",account);
-        [WBAccountTool saveAccount:account];
-        
-        UIWindow *window = [UIApplication sharedApplication].keyWindow;
-        [window switchRootViewController];
-        
-    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-        JWLog(@"error-----%@",error);
-    }];
     
-    /**
-     *
-     #pragma mark -使用原生的网络请求访问
-     NSString *urlStr = [NSString stringWithFormat:@"https://api.weibo.com/oauth2/access_token?client_id=%@&client_secret=%@&redirect_uri=%@&code=%@&grant_type=authorization_code",appKey,appSecret,redirect_uri,code];
-     NSMutableURLRequest *request  = [NSMutableURLRequest requestWithURL:[NSURL URLWithString:urlStr] cachePolicy:NSURLRequestReloadIgnoringCacheData timeoutInterval:5];
-     request.HTTPMethod = @"POST";
-     if (![NSJSONSerialization isValidJSONObject:params]) {
-     JWLog(@"不是可以序列化的JSONObject");
-     }
-     JWLog(@"这里要进行NSURLConncection");
-     request.HTTPBody = [NSJSONSerialization dataWithJSONObject:params options:NSJSONWritingPrettyPrinted error:nil];
-     [NSURLConnection sendAsynchronousRequest:request
-     queue:[NSOperationQueue mainQueue] completionHandler:^(NSURLResponse * _Nullable response, NSData * _Nullable data, NSError * _Nullable connectionError) {
-     if (data.length == 0 || connectionError != nil) {
-     JWLog(@"Error:%@",connectionError);
-     }
-     NSDictionary *dic =  [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:nil];
-     JWLog(@"%@",dic);
-     self.access_token = dic[@"access_token"];
-     } ];
-     */
+    [HttpTool post:@"https://api.weibo.com/oauth2/access_token" params:params
+           success:^(id responseObject) {
+               WBAccount *account = [WBAccount mj_objectWithKeyValues:responseObject];
+               JWLog(@"%@",account);
+               [WBAccountTool saveAccount:account];
+               
+               UIWindow *window = [UIApplication sharedApplication].keyWindow;
+               [window switchRootViewController];
+               
+           } failure:^(NSError *error) {
+                JWLog(@"error-----%@",error);
+           }];
+
 }
 
 
