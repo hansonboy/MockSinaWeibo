@@ -9,7 +9,16 @@
 #import <Foundation/Foundation.h>
 #import "WBEmotion.h"
 @interface WBEmotionTool2 : NSObject
--(NSArray*)emotions;
--(void)saveEmotion:(WBEmotion*)emotion;
--(void)sync;
++(NSArray*)recentEmotions;
++(NSArray*)defaultEmotions;
++(NSArray*)lxhEmotions;
++(NSArray*)emojEmotions;
+/**
+ *  @param chs 图片简介
+ *
+ *  @return 图片名称
+ */
++(UIImage*)pngWithChs:(NSString*)chs;
++(void)saveEmotion:(WBEmotion*)emotion;
++(void)sync;
 @end

@@ -73,7 +73,7 @@
     CGFloat contentTextLabelX = kBorderW;
     CGFloat contentTextLabelY = CGRectGetMaxY(_avatarViewF)>CGRectGetMaxY(_timeLabelF)?(CGRectGetMaxY(_avatarViewF)+kBorderW):(CGRectGetMaxY(_timeLabelF)+kBorderW);;
     CGFloat contentTextLabelW = kScreenW - 2*contentTextLabelX;
-    CGFloat contentTextLabelH = [status.text boundingRectWithSize:CGSizeMake(contentTextLabelW,MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kStatusCellContentTextFont} context:nil].size.height;
+    CGFloat contentTextLabelH = [status.attributedText boundingRectWithSize:CGSizeMake(contentTextLabelW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size.height;
     _contentTextLabelF = CGRectMake(contentTextLabelX, contentTextLabelY, contentTextLabelW, contentTextLabelH);
     
     CGFloat originalViewH = 0;
@@ -101,10 +101,10 @@
         CGFloat retweetContentTextLabelX = kBorderW;
         CGFloat retweetContentTextLabelY = 0;
         CGFloat retweetContentTextLabelW = kMaxW;
-        NSString *retweetText = [NSString stringWithFormat:@"@%@:%@",retweetStatus.user.screen_name,retweetStatus.text];
-        CGFloat retweetContentTextLabelH = [retweetText boundingRectWithSize:CGSizeMake(retweetContentTextLabelW,MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kStatusCellRetweetContentTextFont} context:nil].size.height;
+//        NSString *retweetText = [NSString stringWithFormat:@"@%@:%@",retweetStatus.user.screen_name,retweetStatus.text];
+//        CGFloat retweetContentTextLabelH = [retweetText boundingRectWithSize:CGSizeMake(retweetContentTextLabelW,MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:kStatusCellRetweetContentTextFont} context:nil].size.height;
+        CGFloat retweetContentTextLabelH = [status.retweetedAttributedText boundingRectWithSize:CGSizeMake(retweetContentTextLabelW, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin context:nil].size.height;
         _retweetContentTextLabelF = CGRectMake(retweetContentTextLabelX, retweetContentTextLabelY, retweetContentTextLabelW, retweetContentTextLabelH);
-        
         
         CGFloat retweetViewH = 0;
         if (retweetStatus.pic_urls.count) {

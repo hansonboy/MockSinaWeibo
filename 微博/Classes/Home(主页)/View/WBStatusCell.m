@@ -188,7 +188,8 @@
     self.sourceLabel.text = status.source;
     
     self.contentTextLabel.frame = statusF.contentTextLabelF;
-    self.contentTextLabel.text = status.text;
+//    self.contentTextLabel.text = status.text;
+    self.contentTextLabel.attributedText = status.attributedText;
     
     if (status.pic_urls.count) {
         self.contentImageView.hidden = NO;
@@ -202,7 +203,8 @@
         WBStatus *retweetStatus  = status.retweeted_status;
         
         self.retweetContentTextLabel.frame = statusF.retweetContentTextLabelF;
-        self.retweetContentTextLabel.text = retweetStatus.text;
+        self.retweetContentTextLabel.attributedText = status.retweetedAttributedText;
+//        self.retweetContentTextLabel.text = retweetStatus.text;
         
         if (retweetStatus.pic_urls.count) {
             self.retweetContentImageView.hidden = NO;

@@ -58,8 +58,14 @@
     _user = user;
 //    JWLog(@"收到用户信息了");
     //收到用户消息后去加载用户主页的微博动态
+    
+    self.refreshControl.frame = CGRectMake(0, -87, 320, 60);
+    self.refreshControl.backgroundColor = [UIColor yellowColor];
     self.refreshControl.hidden = NO;
-    self.refreshControl.y = -66.5;
+    [self.refreshControl beginRefreshing];
+    if (self.refreshControl.isRefreshing) {
+//        JWLog(@"转起来了");
+    }
     [self refreshControlValueChanged:self.refreshControl];
     
     [self setupTitleView];
@@ -231,22 +237,23 @@
  */
 -(void)refreshControlValueChanged:(UIRefreshControl*)refreshControl{
 //    JWLog(@"正在加载中哦");
+//     JWLog(@"%@",refreshControl);
     if (refreshControl.isRefreshing == NO) {
         [refreshControl beginRefreshing];
         
     }
-//    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-//        
-//        NSMutableArray *newStatus = [WBStatus mj_objectArrayWithFile:[[NSBundle mainBundle] pathForResource:@"bakStatus.plist" ofType:nil]];
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        
+        NSMutableArray *newStatus = [WBStatus mj_objectArrayWithFile:[[NSBundle mainBundle] pathForResource:@"bakStatus.plist" ofType:nil]];
 //        JWLog(@"新加载了%ld 条微博",newStatus.count);
-//        NSMutableArray *newStatusFM = [WBStatusFrame arrayWithStatusArray:newStatus];
-//        [self showNewsStatusCount:newStatusFM.count];
-//        [self clearBadgeNumber];
-//        [self.statusFM insertObjects:newStatusFM atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, newStatusFM.count)]];
-//        [refreshControl endRefreshing];
-//        [self.tableView reloadData];
-//    });
-//    return;
+        NSMutableArray *newStatusFM = [WBStatusFrame arrayWithStatusArray:newStatus];
+        [self showNewsStatusCount:newStatusFM.count];
+        [self clearBadgeNumber];
+        [self.statusFM insertObjects:newStatusFM atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, newStatusFM.count)]];
+        [refreshControl endRefreshing];
+        [self.tableView reloadData];
+    });
+    return;
     WBAccount *account = [WBAccountTool account];
     WBStatusFrame *lastStatusF = self.statusFM.firstObject;
     NSString *urlStr = [NSString stringWithFormat:@"https://api.weibo.com/2/statuses/home_timeline.json?access_token=%@&since_id=%@",account.access_token,lastStatusF.status.idstr];
@@ -285,7 +292,7 @@
         [refreshControl endRefreshing];
         JWLog(@"%@",error);
     }];
-}
+    }
 -(void)clickBtn:(UIButton*)btn{
     
     WBTestTableViewController*controller = [[WBTestTableViewController alloc]init];

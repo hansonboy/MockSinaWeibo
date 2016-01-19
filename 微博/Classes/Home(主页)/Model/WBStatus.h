@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+
 @class WBUser;
 @interface WBStatus : NSObject<NSCoding>
 /**created_at	string	微博创建时间*/
@@ -18,6 +19,8 @@
 
 /**text	string	微博信息内容*/
 @property (nonatomic ,copy) NSString *text;
+/** 包含表情等 属性文字*/
+@property (nonatomic ,copy) NSAttributedString *attributedText;
 
 /**user	object	微博作者的用户信息字段 详细*/
 @property (strong,nonatomic)WBUser *user;
@@ -29,7 +32,8 @@
 
 /** 转发的微博*/
 @property (strong,nonatomic)WBStatus *retweeted_status;
-
+/**添加了转发微博的原来博主*/
+@property (nonatomic ,copy) NSAttributedString *retweetedAttributedText;
 /** 	转发数*/
 @property (nonatomic ,assign)int reposts_count;
 /** 	评论数*/

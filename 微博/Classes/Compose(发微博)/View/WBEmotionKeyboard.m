@@ -28,7 +28,7 @@
         //这样设置是无效的，因为很有可能self.contentView.bounds 为空
 //        _defaultListView = [[WBEmotionListView alloc]initWithFrame:self.contentView.bounds];
         _defaultListView = [[WBEmotionListView alloc]init];
-        _defaultListView.emotions = [WBEmotion mj_objectArrayWithFilename:@"EmotionIcons/default/info.plist"];
+        _defaultListView.emotions = [kWBEmotionTool2 defaultEmotions];
     }
     return _defaultListView;
 }
@@ -36,21 +36,21 @@
     if (_recentListView == nil) {
         _recentListView = [[WBEmotionListView alloc]init];
     }
-    _recentListView.emotions = [kWBEmotionTool2 emotions];
+    _recentListView.emotions = [kWBEmotionTool2 recentEmotions];
 //    JWLog(@"%@",_recentListView.emotions);
     return _recentListView;
 }
 -(WBEmotionListView *)lxhListView{
     if (_lxhListView == nil) {
         _lxhListView = [[WBEmotionListView alloc]init];
-        _lxhListView.emotions = [WBEmotion mj_objectArrayWithFilename:@"EmotionIcons/lxh/info.plist"];
+        _lxhListView.emotions = [kWBEmotionTool2 lxhEmotions];
     }
     return _lxhListView;
 }
 -(WBEmotionListView *)emojiListView{
     if (_emojiListView == nil) {
         _emojiListView = [[WBEmotionListView alloc]init];
-        _emojiListView.emotions = [WBEmotion mj_objectArrayWithFilename:@"EmotionIcons/emoji/info.plist"];
+        _emojiListView.emotions = [kWBEmotionTool2 emojEmotions];
     }
     return _emojiListView;
 }
@@ -112,7 +112,6 @@
                 JWLog(@"Lxh");
                 break;
             }
-
         case WBEmotionTabBarButtonTypeRecent:
             {
                 [self.contentView addSubview:self.recentListView];

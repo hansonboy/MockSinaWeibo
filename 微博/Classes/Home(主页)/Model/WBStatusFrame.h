@@ -13,12 +13,6 @@
 #define kBorderW 10
 #define kMaxW ((kScreenW) - 2*(kBorderW))
 #define kStatusCellToolbarH 36
-#define kScreenW [UIScreen mainScreen].bounds.size.width
-#define kStatusCellNameFont [UIFont systemFontOfSize:15]
-#define kStatusCellTimeFont [UIFont systemFontOfSize:13]
-#define kStatusCellSouceFont [UIFont systemFontOfSize:14]
-#define kStatusCellContentTextFont [UIFont systemFontOfSize:17]
-#define kStatusCellRetweetContentTextFont [UIFont systemFontOfSize:17]
 @interface WBStatusFrame : NSObject
 
 /**微博数据模型*/

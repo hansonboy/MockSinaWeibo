@@ -63,6 +63,9 @@
 		CB7B895F1C2A940300FDF4DC /* UIImageView+WebCache.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7B894E1C2A940300FDF4DC /* UIImageView+WebCache.m */; };
 		CB7B89601C2A940300FDF4DC /* UIView+WebCacheOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7B89501C2A940300FDF4DC /* UIView+WebCacheOperation.m */; };
 		CB7B89631C2AE92E00FDF4DC /* WBToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = CB7B89621C2AE92E00FDF4DC /* WBToolbar.m */; };
+		CB99472D1C4D238C00D7C0FE /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = CB99472C1C4D238C00D7C0FE /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		CB99472F1C4D23A300D7C0FE /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CB99472E1C4D23A300D7C0FE /* libicucore.tbd */; };
+		CB9947321C4D27C500D7C0FE /* WBStatusPartText.m in Sources */ = {isa = PBXBuildFile; fileRef = CB9947311C4D27C500D7C0FE /* WBStatusPartText.m */; };
 		CBA522491C2CDF55008994F2 /* WBStatusPhotosView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBA522481C2CDF55008994F2 /* WBStatusPhotosView.m */; };
 		CBA5224C1C2D06AA008994F2 /* WBStatusPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBA5224B1C2D06AA008994F2 /* WBStatusPhotoView.m */; };
 		CBA5224F1C2D0BAC008994F2 /* WBStatusAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBA5224E1C2D0BAC008994F2 /* WBStatusAvatarView.m */; };
@@ -234,6 +237,11 @@
 		CB7B89501C2A940300FDF4DC /* UIView+WebCacheOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+WebCacheOperation.m"; sourceTree = "<group>"; };
 		CB7B89611C2AE92E00FDF4DC /* WBToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBToolbar.h; sourceTree = "<group>"; };
 		CB7B89621C2AE92E00FDF4DC /* WBToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBToolbar.m; sourceTree = "<group>"; };
+		CB99472B1C4D238C00D7C0FE /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
+		CB99472C1C4D238C00D7C0FE /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
+		CB99472E1C4D23A300D7C0FE /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+		CB9947301C4D27C500D7C0FE /* WBStatusPartText.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBStatusPartText.h; sourceTree = "<group>"; };
+		CB9947311C4D27C500D7C0FE /* WBStatusPartText.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBStatusPartText.m; sourceTree = "<group>"; };
 		CBA522471C2CDF55008994F2 /* WBStatusPhotosView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBStatusPhotosView.h; sourceTree = "<group>"; };
 		CBA522481C2CDF55008994F2 /* WBStatusPhotosView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBStatusPhotosView.m; sourceTree = "<group>"; };
 		CBA5224A1C2D06AA008994F2 /* WBStatusPhotoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBStatusPhotoView.h; sourceTree = "<group>"; };
@@ -325,6 +333,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CB99472F1C4D23A300D7C0FE /* libicucore.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -523,6 +532,8 @@
 				CBB1DD0E1C291262000DC0D0 /* WBUser.m */,
 				CB7B892C1C2A8F5B00FDF4DC /* WBPhoto.h */,
 				CB7B892D1C2A8F5B00FDF4DC /* WBPhoto.m */,
+				CB9947301C4D27C500D7C0FE /* WBStatusPartText.h */,
+				CB9947311C4D27C500D7C0FE /* WBStatusPartText.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -574,6 +585,7 @@
 		CB707BCD1C18216B00969F7B /* Lib */ = {
 			isa = PBXGroup;
 			children = (
+				CB99472A1C4D238C00D7C0FE /* RegexKitLite */,
 				CB7B892F1C2A940300FDF4DC /* SDWebImage */,
 				CBE9A0DC1C22564C00F7C656 /* MBProgressHUD */,
 				CBE9A0B91C22564100F7C656 /* MJExtension */,
@@ -782,6 +794,7 @@
 		CB7790521C180A79000FC029 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				CB99472E1C4D23A300D7C0FE /* libicucore.tbd */,
 				CBD5C5701C4524E6008ABBDA /* EmotionIcons */,
 				CBE9A0E51C22576400F7C656 /* AppDelegate.h */,
 				CBE9A0E61C22576400F7C656 /* AppDelegate.m */,
@@ -849,6 +862,15 @@
 				CB7B89501C2A940300FDF4DC /* UIView+WebCacheOperation.m */,
 			);
 			path = SDWebImage;
+			sourceTree = "<group>";
+		};
+		CB99472A1C4D238C00D7C0FE /* RegexKitLite */ = {
+			isa = PBXGroup;
+			children = (
+				CB99472B1C4D238C00D7C0FE /* RegexKitLite.h */,
+				CB99472C1C4D238C00D7C0FE /* RegexKitLite.m */,
+			);
+			path = RegexKitLite;
 			sourceTree = "<group>";
 		};
 		CBD5C5781C455474008ABBDA /* Model */ = {
@@ -1041,6 +1063,7 @@
 				CBE9A0E21C22564C00F7C656 /* MBProgressHUD+MJ.m in Sources */,
 				CBE9A0DB1C22564100F7C656 /* NSString+MJExtension.m in Sources */,
 				CB707BF41C18690F00969F7B /* WBDiscoverTableViewController.m in Sources */,
+				CB99472D1C4D238C00D7C0FE /* RegexKitLite.m in Sources */,
 				CB6676051C1F211D0007476E /* AFHTTPSessionManager.m in Sources */,
 				CBE9A0D71C22564100F7C656 /* NSObject+MJClass.m in Sources */,
 				CBA5224C1C2D06AA008994F2 /* WBStatusPhotoView.m in Sources */,
@@ -1093,6 +1116,7 @@
 				CBE9A0D11C22564100F7C656 /* MJDictionaryCache.m in Sources */,
 				CB7790551C180A79000FC029 /* main.m in Sources */,
 				CB707BE01C18216B00969F7B /* WBHomeTableViewController.m in Sources */,
+				CB9947321C4D27C500D7C0FE /* WBStatusPartText.m in Sources */,
 				CB0EE6311C2BC10600228317 /* NSDate+Extension.m in Sources */,
 				CB0CFAAF1C479C7200C37ACD /* WBEmotionAttachment.m in Sources */,
 				CBD5C5771C453C2E008ABBDA /* UIImage+Extension.m in Sources */,

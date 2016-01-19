@@ -30,15 +30,22 @@
 #import "UIImage+Extension.h"
 #import "UITextView+Extension.h"
 #import "Constant.h"
+#import "RegexKitLite.h"
 #ifdef  DEBUG
 #define JWLog(xx, ...)  NSLog(@"%s(%d): " xx, __PRETTY_FUNCTION__, __LINE__, ##__VA_ARGS__)
 #else
 #define JWLog(xx, ...)
 #endif
-#define kWBEmotionTool2 [[WBEmotionTool2 alloc]init]
+#define kWBEmotionTool2 WBEmotionTool2
 #define kWBEmotionTool [WBEmotionTool sharedEmotionTool]
 #define kNotificationCenter [NSNotificationCenter defaultCenter]
-
+//status Cell
+#define kScreenW [UIScreen mainScreen].bounds.size.width
+#define kStatusCellNameFont [UIFont systemFontOfSize:15]
+#define kStatusCellTimeFont [UIFont systemFontOfSize:13]
+#define kStatusCellSouceFont [UIFont systemFontOfSize:14]
+#define kStatusCellContentTextFont [UIFont systemFontOfSize:17]
+#define kStatusCellRetweetContentTextFont [UIFont systemFontOfSize:17]
 //UIKeyboardFrameBeginUserInfoKey
 //UIKeyboardDidHideNotification
 

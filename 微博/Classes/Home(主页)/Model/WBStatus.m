@@ -8,6 +8,9 @@
 
 #import "WBStatus.h"
 #import "WBPhoto.h"
+#import "WBUser.h"
+#import "WBStatusPartText.h"
+#import "WBEmotionTool2.h"
 @implementation WBStatus
 
 +(NSDictionary *)mj_objectClassInArray{
@@ -91,4 +94,74 @@ MJCodingImplementation
     else _source = nil;
 }
 
+-(void)setText:(NSString *)text{
+    _text = text;
+    _attributedText = [self attributedTextWithText:text font:kStatusCellContentTextFont];
+}
+/**
+ *  用text 初始化attributedText
+ */
+-(NSAttributedString*)attributedTextWithText:(NSString*)text font:(UIFont*)font{
+    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc]init];
+    
+    NSString *emotionPattern = @"\\[[\\w]*\\]";
+    NSString *atPattern = @"@[\\w-]+";
+    NSString *topicPattern = @"#[\\w-，,]+#";
+    NSString *urlPattern = @"(http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?";
+    NSString *pattern = [NSString stringWithFormat:@"%@|%@|%@|%@",topicPattern,emotionPattern,atPattern,urlPattern];
+    JWLog(@"text:%@",text);
+    NSMutableArray * parts  = [NSMutableArray array];
+    //取出所有特殊字符串,放入到parts
+    [text enumerateStringsMatchedByRegex:pattern usingBlock:^(NSInteger captureCount, NSString *const __unsafe_unretained *capturedStrings, const NSRange *capturedRanges, volatile BOOL *const stop) {
+        JWLog(@"special:%@-%@",*capturedStrings,NSStringFromRange(*capturedRanges));
+        WBStatusPartText *part = [WBStatusPartText partWithText: *capturedStrings range:*capturedRanges];
+        part.special = YES;
+        if ([*capturedStrings hasPrefix:@"["] && [*capturedStrings hasSuffix:@"]"]) {
+            part.emotion = YES;
+        }
+        [parts addObject:part];
+        
+    }];
+   //取出所有正常字符串,放入到parts
+    [text enumerateStringsSeparatedByRegex:pattern usingBlock:^(NSInteger captureCount, NSString *const __unsafe_unretained *capturedStrings, const NSRange *capturedRanges, volatile BOOL *const stop) {
+        JWLog(@"Normal:%@-%@",*capturedStrings,NSStringFromRange(*capturedRanges));
+        [parts addObject:[WBStatusPartText partWithText:*capturedStrings range:*capturedRanges]];
+    }];
+    
+    [parts sortUsingComparator:^NSComparisonResult(WBStatusPartText * part1, WBStatusPartText * part2) {
+        if(part1.range.location < part2.range.location)return NSOrderedAscending;
+        else return NSOrderedDescending;
+    }];
+    
+    for (NSUInteger i  = 0; i < parts.count; i++) {
+        WBStatusPartText * part  = parts[i];
+        if (part.isSpecial) {
+            if (part.isEmotion) {
+                NSTextAttachment *attach = [[NSTextAttachment alloc]init];
+                attach.image = [kWBEmotionTool2 pngWithChs:part.text];
+                if (attach.image) {
+                    attach.bounds = CGRectMake(-3, 0,kStatusCellContentTextFont.lineHeight , kStatusCellContentTextFont.lineHeight);
+                    [attributedText appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
+                }else{
+                    NSRange range = NSMakeRange(attributedText.length, part.text.length);
+                    [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:part.text]];
+                    [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:range];
+                }
+            }else{
+                NSRange range = NSMakeRange(attributedText.length, part.text.length);
+                [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:part.text]];
+                [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:range];
+            }
+        }else{
+            [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:part.text]];
+        }
+    }
+    [attributedText addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, attributedText.length)];
+    return attributedText;
+}
+-(void)setRetweeted_status:(WBStatus *)retweeted_status{
+    _retweeted_status = retweeted_status;
+    NSString *retweetText = [NSString stringWithFormat:@"@%@:%@",retweeted_status.user.screen_name,retweeted_status.text];
+    _retweetedAttributedText = [self attributedTextWithText:retweetText font:kStatusCellRetweetContentTextFont];
+}
 @end
