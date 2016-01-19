@@ -140,7 +140,7 @@ MJCodingImplementation
                 NSTextAttachment *attach = [[NSTextAttachment alloc]init];
                 attach.image = [kWBEmotionTool2 pngWithChs:part.text];
                 if (attach.image) {
-                    attach.bounds = CGRectMake(-3, 0,kStatusCellContentTextFont.lineHeight , kStatusCellContentTextFont.lineHeight);
+                    attach.bounds = CGRectMake(0, 0,font.lineHeight , font.lineHeight);
                     [attributedText appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
                 }else{
                     NSRange range = NSMakeRange(attributedText.length, part.text.length);
