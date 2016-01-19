@@ -58,3 +58,4 @@ pic_ids	object	微博配图ID。多图时返回多图ID，用来拼接图片url�
 ad	object array	微博流内的推广微博ID
  */
 @end
+extern NSString * const kStatusSpecialtextRanges;

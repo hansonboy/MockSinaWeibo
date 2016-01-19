@@ -11,6 +11,8 @@
 #import "WBUser.h"
 #import "WBStatusPartText.h"
 #import "WBEmotionTool2.h"
+#define kForegroundColorForSpecialParts [UIColor blueColor]
+NSString * const kStatusSpecialtextRanges = @"SpecialRanges";
 @implementation WBStatus
 
 +(NSDictionary *)mj_objectClassInArray{
@@ -109,11 +111,10 @@ MJCodingImplementation
     NSString *topicPattern = @"#[\\w-，,]+#";
     NSString *urlPattern = @"(http|ftp|https):\\/\\/[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?";
     NSString *pattern = [NSString stringWithFormat:@"%@|%@|%@|%@",topicPattern,emotionPattern,atPattern,urlPattern];
-    JWLog(@"text:%@",text);
     NSMutableArray * parts  = [NSMutableArray array];
     //取出所有特殊字符串,放入到parts
     [text enumerateStringsMatchedByRegex:pattern usingBlock:^(NSInteger captureCount, NSString *const __unsafe_unretained *capturedStrings, const NSRange *capturedRanges, volatile BOOL *const stop) {
-        JWLog(@"special:%@-%@",*capturedStrings,NSStringFromRange(*capturedRanges));
+//        JWLog(@"special:%@-%@",*capturedStrings,NSStringFromRange(*capturedRanges));
         WBStatusPartText *part = [WBStatusPartText partWithText: *capturedStrings range:*capturedRanges];
         part.special = YES;
         if ([*capturedStrings hasPrefix:@"["] && [*capturedStrings hasSuffix:@"]"]) {
@@ -124,15 +125,17 @@ MJCodingImplementation
     }];
    //取出所有正常字符串,放入到parts
     [text enumerateStringsSeparatedByRegex:pattern usingBlock:^(NSInteger captureCount, NSString *const __unsafe_unretained *capturedStrings, const NSRange *capturedRanges, volatile BOOL *const stop) {
-        JWLog(@"Normal:%@-%@",*capturedStrings,NSStringFromRange(*capturedRanges));
+//        JWLog(@"Normal:%@-%@",*capturedStrings,NSStringFromRange(*capturedRanges));
         [parts addObject:[WBStatusPartText partWithText:*capturedStrings range:*capturedRanges]];
     }];
     
+    //对所有的字符串按照range顺序进行排序
     [parts sortUsingComparator:^NSComparisonResult(WBStatusPartText * part1, WBStatusPartText * part2) {
         if(part1.range.location < part2.range.location)return NSOrderedAscending;
         else return NSOrderedDescending;
     }];
-    
+    //进行字符串的拼接，在拼接过程中如果发现了特殊表情，我们将换成图片
+    NSMutableArray * ranges = [NSMutableArray array];
     for (NSUInteger i  = 0; i < parts.count; i++) {
         WBStatusPartText * part  = parts[i];
         if (part.isSpecial) {
@@ -143,6 +146,7 @@ MJCodingImplementation
                     attach.bounds = CGRectMake(0, 0,font.lineHeight , font.lineHeight);
                     [attributedText appendAttributedString:[NSAttributedString attributedStringWithAttachment:attach]];
                 }else{
+                    
                     NSRange range = NSMakeRange(attributedText.length, part.text.length);
                     [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:part.text]];
                     [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:range];
@@ -150,13 +154,16 @@ MJCodingImplementation
             }else{
                 NSRange range = NSMakeRange(attributedText.length, part.text.length);
                 [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:part.text]];
-                [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor blueColor] range:range];
+                [attributedText addAttribute:NSForegroundColorAttributeName value:kForegroundColorForSpecialParts range:range];
+                //将需要高亮的字符串的range范围进行保存，为在textView中点击高亮进行准备
+                [ranges addObject:[NSValue valueWithRange:range]];
             }
         }else{
             [attributedText appendAttributedString:[[NSAttributedString alloc] initWithString:part.text]];
         }
     }
     [attributedText addAttribute:NSFontAttributeName value:font range:NSMakeRange(0, attributedText.length)];
+    [attributedText addAttribute:kStatusSpecialtextRanges value:ranges range:NSMakeRange(0, 1)];
     return attributedText;
 }
 -(void)setRetweeted_status:(WBStatus *)retweeted_status{

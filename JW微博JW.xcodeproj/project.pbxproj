@@ -70,6 +70,7 @@
 		CBA5224C1C2D06AA008994F2 /* WBStatusPhotoView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBA5224B1C2D06AA008994F2 /* WBStatusPhotoView.m */; };
 		CBA5224F1C2D0BAC008994F2 /* WBStatusAvatarView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBA5224E1C2D0BAC008994F2 /* WBStatusAvatarView.m */; };
 		CBA522531C2D259D008994F2 /* bakStatus.plist in Resources */ = {isa = PBXBuildFile; fileRef = CBA522521C2D259D008994F2 /* bakStatus.plist */; };
+		CBAB5A471C4E093900D139C2 /* WBStatusSelectedBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBAB5A461C4E093900D139C2 /* WBStatusSelectedBackgroundView.m */; };
 		CBB1DD011C281415000DC0D0 /* WBStatusCell.m in Sources */ = {isa = PBXBuildFile; fileRef = CBB1DD001C281415000DC0D0 /* WBStatusCell.m */; };
 		CBB1DD041C28E1AB000DC0D0 /* WBStatusFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = CBB1DD031C28E1AB000DC0D0 /* WBStatusFrame.m */; };
 		CBB1DD0A1C28F9CA000DC0D0 /* NSString+Extension.m in Sources */ = {isa = PBXBuildFile; fileRef = CBB1DD091C28F9CA000DC0D0 /* NSString+Extension.m */; };
@@ -109,6 +110,7 @@
 		CBE9A0F01C229DA500F7C656 /* WBAccountTool.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE9A0EF1C229DA500F7C656 /* WBAccountTool.m */; };
 		CBE9A0F51C22B2D400F7C656 /* NSDictionary+Log.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE9A0F41C22B2D400F7C656 /* NSDictionary+Log.m */; };
 		CBE9A0F81C22B31000F7C656 /* NSArray+Log.m in Sources */ = {isa = PBXBuildFile; fileRef = CBE9A0F71C22B31000F7C656 /* NSArray+Log.m */; };
+		CBEF32311C4DD882002CDE5B /* WBStatusTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = CBEF32301C4DD882002CDE5B /* WBStatusTextView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -249,6 +251,8 @@
 		CBA5224D1C2D0BAC008994F2 /* WBStatusAvatarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBStatusAvatarView.h; sourceTree = "<group>"; };
 		CBA5224E1C2D0BAC008994F2 /* WBStatusAvatarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBStatusAvatarView.m; sourceTree = "<group>"; };
 		CBA522521C2D259D008994F2 /* bakStatus.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = bakStatus.plist; sourceTree = "<group>"; };
+		CBAB5A451C4E093900D139C2 /* WBStatusSelectedBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBStatusSelectedBackgroundView.h; sourceTree = "<group>"; };
+		CBAB5A461C4E093900D139C2 /* WBStatusSelectedBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBStatusSelectedBackgroundView.m; sourceTree = "<group>"; };
 		CBB1DCFF1C281415000DC0D0 /* WBStatusCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBStatusCell.h; sourceTree = "<group>"; };
 		CBB1DD001C281415000DC0D0 /* WBStatusCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBStatusCell.m; sourceTree = "<group>"; };
 		CBB1DD021C28E1AB000DC0D0 /* WBStatusFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBStatusFrame.h; sourceTree = "<group>"; };
@@ -326,6 +330,8 @@
 		CBE9A0F41C22B2D400F7C656 /* NSDictionary+Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+Log.m"; sourceTree = "<group>"; };
 		CBE9A0F61C22B31000F7C656 /* NSArray+Log.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+Log.h"; sourceTree = "<group>"; };
 		CBE9A0F71C22B31000F7C656 /* NSArray+Log.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+Log.m"; sourceTree = "<group>"; };
+		CBEF322F1C4DD882002CDE5B /* WBStatusTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WBStatusTextView.h; sourceTree = "<group>"; };
+		CBEF32301C4DD882002CDE5B /* WBStatusTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WBStatusTextView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -553,6 +559,10 @@
 				CBA5224B1C2D06AA008994F2 /* WBStatusPhotoView.m */,
 				CBA5224D1C2D0BAC008994F2 /* WBStatusAvatarView.h */,
 				CBA5224E1C2D0BAC008994F2 /* WBStatusAvatarView.m */,
+				CBEF322F1C4DD882002CDE5B /* WBStatusTextView.h */,
+				CBEF32301C4DD882002CDE5B /* WBStatusTextView.m */,
+				CBAB5A451C4E093900D139C2 /* WBStatusSelectedBackgroundView.h */,
+				CBAB5A461C4E093900D139C2 /* WBStatusSelectedBackgroundView.m */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -1062,6 +1072,7 @@
 				CB6676071C1F211D0007476E /* AFSecurityPolicy.m in Sources */,
 				CBE9A0E21C22564C00F7C656 /* MBProgressHUD+MJ.m in Sources */,
 				CBE9A0DB1C22564100F7C656 /* NSString+MJExtension.m in Sources */,
+				CBAB5A471C4E093900D139C2 /* WBStatusSelectedBackgroundView.m in Sources */,
 				CB707BF41C18690F00969F7B /* WBDiscoverTableViewController.m in Sources */,
 				CB99472D1C4D238C00D7C0FE /* RegexKitLite.m in Sources */,
 				CB6676051C1F211D0007476E /* AFHTTPSessionManager.m in Sources */,
@@ -1117,6 +1128,7 @@
 				CB7790551C180A79000FC029 /* main.m in Sources */,
 				CB707BE01C18216B00969F7B /* WBHomeTableViewController.m in Sources */,
 				CB9947321C4D27C500D7C0FE /* WBStatusPartText.m in Sources */,
+				CBEF32311C4DD882002CDE5B /* WBStatusTextView.m in Sources */,
 				CB0EE6311C2BC10600228317 /* NSDate+Extension.m in Sources */,
 				CB0CFAAF1C479C7200C37ACD /* WBEmotionAttachment.m in Sources */,
 				CBD5C5771C453C2E008ABBDA /* UIImage+Extension.m in Sources */,

@@ -13,6 +13,7 @@
 #import "WBToolbar.h"
 #import "WBStatusPhotosView.h"
 #import "WBStatusAvatarView.h"
+#import "WBStatusTextView.h"
 @interface WBStatusCell()
 /** 原创微博整体*/
 @property (weak,nonatomic)UIView *originalView;
@@ -27,7 +28,7 @@
 /**来源*/
 @property (weak,nonatomic)UILabel *sourceLabel;
 /**正文*/
-@property (weak,nonatomic)UILabel *contentTextLabel;
+@property (weak,nonatomic)WBStatusTextView *contentTextLabel;
 /**图片*/
 @property (weak,nonatomic)WBStatusPhotosView *contentImageView;
 
@@ -35,7 +36,7 @@
 /**转发微博整体*/
 @property (weak,nonatomic)UIView *retweetView;
 /**转发微博的内容+昵称*/
-@property (weak,nonatomic)UILabel *retweetContentTextLabel;
+@property (weak,nonatomic)WBStatusTextView *retweetContentTextLabel;
 /**转发微博的图片*/
 @property (weak,nonatomic)WBStatusPhotosView *retweetContentImageView;
 
@@ -85,10 +86,9 @@
     _retweetView = retweetView;
     _retweetView.backgroundColor = color(230, 230, 230);
     
-    UILabel *retweetContentTextLabel = [[UILabel alloc]init];
-    
-    retweetContentTextLabel.numberOfLines = 0;
+    WBStatusTextView *retweetContentTextLabel = [[WBStatusTextView alloc]init];
     retweetContentTextLabel.textAlignment = NSTextAlignmentLeft;
+    retweetContentTextLabel.backgroundColor = [UIColor clearColor];
     retweetContentTextLabel.font = kStatusCellRetweetContentTextFont;
     [_retweetView addSubview:retweetContentTextLabel];
     _retweetContentTextLabel = retweetContentTextLabel;
@@ -133,9 +133,9 @@
     [_originalView addSubview:sourceLabel];
     _sourceLabel = sourceLabel;
     
-    UILabel * contentTextLabel = [[UILabel alloc]init];
+    WBStatusTextView * contentTextLabel = [[WBStatusTextView alloc]init];
     contentTextLabel.textAlignment = NSTextAlignmentLeft;
-    contentTextLabel.numberOfLines = 0;
+//    contentTextLabel.numberOfLines = 0;
     contentTextLabel.font = kStatusCellContentTextFont;
     [_originalView addSubview:contentTextLabel];
     _contentTextLabel = contentTextLabel;
