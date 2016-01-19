@@ -361,5 +361,8 @@
         [self footerClick:self.footerLoadMoreBtn];
     }
 }
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    JWLog(@"selected--%d",indexPath.row);
+}
 @end
 #warning 现在最后一条消息加载重复出现

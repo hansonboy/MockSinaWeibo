@@ -9,9 +9,12 @@
 #import "WBStatusTextView.h"
 #import "WBStatus.h"
 #import "WBStatusSelectedBackgroundView.h"
-NSUInteger const kStatusTextViewBackgroundViewTag  = 999;
 
 extern NSString * const kStatusSpecialtextRanges;
+@interface WBStatusTextView()
+/** 用来存放特殊字符的range*/
+@property (strong,nonatomic)NSArray *specialRanges;
+@end
 @implementation WBStatusTextView
 -(instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
@@ -22,36 +25,37 @@ extern NSString * const kStatusSpecialtextRanges;
     }
     return self;
 }
+-(void)setAttributedText:(NSAttributedString *)attributedText{
+    [super setAttributedText:attributedText];
+    //通过addAttributes: 属性传递了那些特殊字符串的ranges,ranges 是nsvalue包装的
+    NSDictionary *dic = [self.attributedText attributesAtIndex:0 effectiveRange:nil];
+    _specialRanges = dic[kStatusSpecialtextRanges];
+}
+-(BOOL)pointInside:(CGPoint)point withEvent:(UIEvent *)event{
+    BOOL __block contained = NO;
+    [self.specialRanges enumerateObjectsUsingBlock:^(NSValue* obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        *stop = contained = [self range:obj.rangeValue containsPoint:point];
+    }];
+    return contained;
+}
+
 -(void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     UITouch *touch = [touches anyObject];
     CGPoint point = [touch locationInView:self];
-
-    //通过addAttributes: 属性传递了那些特殊字符串的ranges,ranges 是nsvalue包装的
-    NSDictionary *dic = [self.attributedText attributesAtIndex:0 effectiveRange:nil];
-    NSArray *ranges = dic[kStatusSpecialtextRanges];
     
-    [ranges enumerateObjectsUsingBlock:^(NSValue * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        self.selectedRange = obj.rangeValue;
-        NSArray *rects = [self selectionRectsForRange:self.selectedTextRange];
-        self.selectedRange = NSMakeRange(0, 0);
-        BOOL __block selected = NO;
-        [rects enumerateObjectsUsingBlock:^(UITextSelectionRect *  obj, NSUInteger idx, BOOL * _Nonnull stop) {
-            CGRect rect = obj.rect;
-            if (rect.size.width && rect.size.height) {
-                if (CGRectContainsPoint(rect, point)) {
-                    selected = YES;
-                }
-            }
-        }];
-        if (selected) {
+    [self.specialRanges enumerateObjectsUsingBlock:^(NSValue * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        if ([self range:obj.rangeValue containsPoint:point]) {
+            NSArray *rects = [self rectsForRange:obj.rangeValue];
             [rects enumerateObjectsUsingBlock:^(UITextSelectionRect * obj, NSUInteger idx, BOOL * _Nonnull stop) {
                 CGRect rect = obj.rect;
                 WBStatusSelectedBackgroundView *view = [[WBStatusSelectedBackgroundView alloc]initWithFrame:rect];
                 [self insertSubview:view atIndex:0];
             }];
+            *stop = YES;
         }
     }];
 }
+
 -(void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event{
     [self.subviews enumerateObjectsUsingBlock:^(__kindof UIView * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         if ([obj isKindOfClass:[WBStatusSelectedBackgroundView class]]) {
@@ -63,5 +67,22 @@ extern NSString * const kStatusSpecialtextRanges;
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.25 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self touchesCancelled:touches withEvent:event];
     });
+}
+-(BOOL)range:(NSRange)range containsPoint:(CGPoint)point{
+    NSArray *rects = [self rectsForRange:range];
+    BOOL __block selected = NO;
+    [rects enumerateObjectsUsingBlock:^(UITextSelectionRect *  obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        CGRect rect = obj.rect;
+        if (rect.size.width && rect.size.height) {
+            *stop = selected = CGRectContainsPoint(rect, point);
+        }
+    }];
+    return selected;
+}
+-(NSArray*)rectsForRange:(NSRange)range{
+    self.selectedRange = range;
+    NSArray *rects = [self selectionRectsForRange:self.selectedTextRange];
+    self.selectedRange = NSMakeRange(0, 0);
+    return rects;
 }
 @end
