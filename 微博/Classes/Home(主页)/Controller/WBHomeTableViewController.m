@@ -15,6 +15,7 @@
 #import "WBStatus.h"
 #import "WBStatusFrame.h"
 #import "WBStatusCell.h"
+#import "WBStatusTool.h"
 @interface WBHomeTableViewController ()<WBPopMenuDelegate>
 @property (strong,nonatomic)NSMutableArray *statusFM;
 /**
@@ -60,7 +61,7 @@
     //收到用户消息后去加载用户主页的微博动态
     
     self.refreshControl.frame = CGRectMake(0, -87, 320, 60);
-    self.refreshControl.backgroundColor = [UIColor yellowColor];
+//    self.refreshControl.backgroundColor = [UIColor yellowColor];
     self.refreshControl.hidden = NO;
     [self.refreshControl beginRefreshing];
     if (self.refreshControl.isRefreshing) {
@@ -214,22 +215,32 @@
 //    JWLog(@"正在加载中哦");
     WBAccount *account = [WBAccountTool account];
     WBStatusFrame *firstStatusF = self.statusFM.lastObject;
-    NSString *urlStr = [NSString stringWithFormat:@"https://api.weibo.com/2/statuses/home_timeline.json?access_token=%@&max_id=%@",account.access_token,firstStatusF.status.idstr];
-    
-    [HttpTool get:urlStr params:nil success:^(id responseObject) {
-        btn.selected = NO;
-        NSMutableArray *newStatus = [WBStatus mj_objectArrayWithKeyValuesArray:responseObject[@"statuses"]];
-        //        JWLog(@"新加载了%d 条微博",newStatus.count);
-        NSMutableArray *newStatusFM = [WBStatusFrame arrayWithStatusArray:newStatus];
-        [self.statusFM addObjectsFromArray:newStatusFM];
-        [self.tableView reloadData];
-        [self showNewsStatusCount:newStatusFM.count];
-    } failure:^(NSError *error) {
-        btn.selected = NO;
-        JWLog(@"%@",error);
-    }];
+    //1.先从数据库中加载旧数据
+    NSArray* oldStatuses = [WBStatusTool loadOldStatusesByMaxStatus:firstStatusF.status];
+    if (oldStatuses) {
+        [self loadOldStatuses:oldStatuses];
+    }else{
+        //2.不存在旧数据，去网络请求旧数据
+        NSString *urlStr = [NSString stringWithFormat:@"https://api.weibo.com/2/statuses/home_timeline.json?access_token=%@&max_id=%@",account.access_token,firstStatusF.status.idstr];
+        [HttpTool get:urlStr params:nil success:^(id responseObject) {
+            btn.selected = NO;
+            [self loadOldStatuses:oldStatuses];
+            [WBStatusTool saveStatuses:responseObject[@"statuses"]];
+        } failure:^(NSError *error) {
+            btn.selected = NO;
+            JWLog(@"%@",error);
+        }];
+    }
 }
-
+//为tableView加载旧数据
+-(void)loadOldStatuses:(NSArray*)statuses{
+    NSMutableArray *oldStatuses = [WBStatus mj_objectArrayWithKeyValuesArray:statuses];
+    //        JWLog(@"新加载了%d 条微博",newStatus.count);
+    NSMutableArray *oldStatusFM = [WBStatusFrame arrayWithStatusArray:oldStatuses];
+    [self.statusFM addObjectsFromArray:oldStatusFM];
+    [self.tableView reloadData];
+    [self showNewsStatusCount:oldStatusFM.count];
+}
 /**
  *  加载用户的主页微博动态
  *
@@ -240,59 +251,70 @@
 //     JWLog(@"%@",refreshControl);
     if (refreshControl.isRefreshing == NO) {
         [refreshControl beginRefreshing];
-        
     }
+//    [self loadFakeStatuses];
+    WBAccount *account = [WBAccountTool account];
+    WBStatusFrame *lastStatusF = self.statusFM.firstObject;
+    //1.先访问沙盒，看沙盒中是否存在有数据
+    NSArray *statuses = [WBStatusTool loadNewStatusesByMinStatus:lastStatusF.status];
+    if (statuses) {
+        [self loadNewStatuses:statuses];
+    }else{
+        //2.沙盒不存在数据，访问网络获取数据
+        NSString *urlStr = [NSString stringWithFormat:@"https://api.weibo.com/2/statuses/home_timeline.json?access_token=%@&since_id=%@",account.access_token,lastStatusF.status.idstr];
+        [HttpTool get:urlStr params:nil success:^(id responseObject) {
+            [WBStatusTool saveStatuses:responseObject[@"statuses"]];
+            [self loadNewStatuses:responseObject[@"statuses"]];
+        } failure:^(NSError *error) {
+            [refreshControl endRefreshing];
+            JWLog(@"%@",error);
+        }];
+    }
+}
+//为tableView 加载假数据
+-(void)loadFakeStatuses{
+    //    模拟加载假数据
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         
         NSMutableArray *newStatus = [WBStatus mj_objectArrayWithFile:[[NSBundle mainBundle] pathForResource:@"bakStatus.plist" ofType:nil]];
-//        JWLog(@"新加载了%ld 条微博",newStatus.count);
-        NSMutableArray *newStatusFM = [WBStatusFrame arrayWithStatusArray:newStatus];
-        [self showNewsStatusCount:newStatusFM.count];
-        [self clearBadgeNumber];
-        [self.statusFM insertObjects:newStatusFM atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, newStatusFM.count)]];
-        [refreshControl endRefreshing];
-        [self.tableView reloadData];
-    });
-    return;
-    WBAccount *account = [WBAccountTool account];
-    WBStatusFrame *lastStatusF = self.statusFM.firstObject;
-    NSString *urlStr = [NSString stringWithFormat:@"https://api.weibo.com/2/statuses/home_timeline.json?access_token=%@&since_id=%@",account.access_token,lastStatusF.status.idstr];
-    
-    [HttpTool get:urlStr params:nil success:^(id responseObject) {
-        [refreshControl endRefreshing];
-        //        JWLog(@"%@",responseObject);
-        NSMutableArray *newStatus = [WBStatus mj_objectArrayWithKeyValuesArray:responseObject[@"statuses"]];
-        
-        /** 以下是进行的数组，字典，对象归档尝试，主要是加深了对与mjextesion的了解，同时归档后获取了假数据，以后没有网络，我们也可以进行测试了，而且我们的速度更快哦
-         NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
-         NSString *filePath = [dir stringByAppendingPathComponent:@"bakStatus.plist"];
-         if ([NSKeyedArchiver archiveRootObject:newStatus toFile:filePath]) {
-         JWLog(@"归档成功");
-         }else JWLog(@"归档失败");
-         NSMutableArray *unarchiverObjects = [NSKeyedUnarchiver unarchiveObjectWithFile:filePath];
-         NSMutableArray *keyValues = [NSObject mj_keyValuesArrayWithObjectArray:newStatus];
-         if ([keyValues writeToFile:filePath atomically:YES]) {
-         JWLog(@"数组写入成功");
-         }else JWLog(@"数组写入失败");
-         
-         filePath = [dir stringByAppendingPathComponent:@"bakStatus1.plist"];
-         if ([responseObject writeToFile:filePath atomically:YES]) {
-         JWLog(@"字典写入成功");
-         }else JWLog("字典写入失败");
-         */
-        
         //        JWLog(@"新加载了%ld 条微博",newStatus.count);
-        NSMutableArray *newStatusFM = [WBStatusFrame arrayWithStatusArray:newStatus];
-        [self showNewsStatusCount:newStatusFM.count];
-        [self clearBadgeNumber];
-        [self.statusFM insertObjects:newStatusFM atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, newStatusFM.count)]];
-        [self.tableView reloadData];
+        NSMutableArray *statuses = [WBStatus mj_objectArrayWithKeyValuesArray:newStatus];
+        [self loadNewStatuses:statuses];
+        return;
+    });
+}
+//为tableView加载新数据
+-(void)loadNewStatuses:(NSArray*)statuses{
+    [self.refreshControl endRefreshing];
+    //将字典数组保存为对象数组
+    NSMutableArray *newStatuses = [WBStatus mj_objectArrayWithKeyValuesArray:statuses];
+    NSMutableArray *newStatusFM = [WBStatusFrame arrayWithStatusArray:newStatuses];
+    [self showNewsStatusCount:newStatusFM.count];
+    [self clearBadgeNumber];
+    [self.statusFM insertObjects:newStatusFM atIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, newStatusFM.count)]];
+    [self.tableView reloadData];
+}
 
-    } failure:^(NSError *error) {
-        [refreshControl endRefreshing];
-        JWLog(@"%@",error);
-    }];
-    }
+//将下载回来的status 数据保存在沙盒中
+-(void)writeToFileWithDictionary:(NSDictionary*)responseObject{
+    NSMutableArray *newStatus = [WBStatus mj_objectArrayWithKeyValuesArray:responseObject[@"statuses"]];
+    /** 以下是进行的数组，字典，对象归档尝试，主要是加深了对与mjextesion的了解，同时归档后获取了假数据，以后没有网络，我们也可以进行测试了，而且我们的速度更快哦*/
+    NSString *dir = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) lastObject];
+    NSString *filePath = [dir stringByAppendingPathComponent:@"bakStatus2.plist"];
+    if ([NSKeyedArchiver archiveRootObject:newStatus toFile:filePath]) {
+        JWLog(@"归档成功");
+    }else JWLog(@"归档失败");
+    NSMutableArray *keyValues = [NSObject mj_keyValuesArrayWithObjectArray:newStatus];
+    if ([keyValues writeToFile:filePath atomically:YES]) {
+        JWLog(@"数组写入成功");
+    }else JWLog(@"数组写入失败");
+    
+    filePath = [dir stringByAppendingPathComponent:@"bakStatus2.plist"];
+    if ([responseObject writeToFile:filePath atomically:YES]) {
+        JWLog(@"字典写入成功");
+    }else JWLog("字典写入失败");
+}
+
 -(void)clickBtn:(UIButton*)btn{
     
     WBTestTableViewController*controller = [[WBTestTableViewController alloc]init];
@@ -302,7 +324,6 @@
     menu.contentController = controller;
     menu.delegate = self;
     [menu showFrom:btn];
-    
 }
 
 -(void)frendSearch{
