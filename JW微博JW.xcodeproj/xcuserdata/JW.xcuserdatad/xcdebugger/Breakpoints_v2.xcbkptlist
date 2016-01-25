@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x5fae;&#x535a;/Classes/Home(&#x4e3b;&#x9875;)/Controller/WBHomeTableViewController.m"
-            timestampString = "475177609.143417"
+            timestampString = "475247048.192473"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "261"
-            endingLineNumber = "261"
+            startingLineNumber = "267"
+            endingLineNumber = "267"
             landmarkName = "-refreshControlValueChanged:"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x5fae;&#x535a;/Classes/Home(&#x4e3b;&#x9875;)/Controller/WBHomeTableViewController.m"
-            timestampString = "475177609.143417"
+            timestampString = "475247048.192473"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "228"
-            endingLineNumber = "228"
+            startingLineNumber = "234"
+            endingLineNumber = "234"
             landmarkName = "-footerClick:"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,12 +90,28 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x5fae;&#x535a;/Classes/Home(&#x4e3b;&#x9875;)/Controller/WBHomeTableViewController.m"
-            timestampString = "475176961.37471"
+            timestampString = "475247048.192473"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
+            startingLineNumber = "227"
+            endingLineNumber = "227"
             landmarkName = "-footerClick:"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "&#x5fae;&#x535a;/Classes/Mine(&#x6211;)/Controller/WBMineTableViewController.m"
+            timestampString = "475320703.807836"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
+            landmarkName = "-clearAllCache"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -17,16 +17,25 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
- 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
-    UIBarButtonItem * item= [[UIBarButtonItem alloc]initWithTitle:@"设置" style:UIBarButtonItemStylePlain target:self action:@selector(setting)];
+    UIBarButtonItem * item= [[UIBarButtonItem alloc]initWithTitle:@"清除缓存" style:UIBarButtonItemStylePlain target:self action:@selector(clearAllCache)];
     self.navigationItem.rightBarButtonItem = item;
+    
+    self.navigationItem.title = [NSString stringWithFormat:@"缓存文件(%.2fM)",([SDImageCache sharedImageCache].getSize)/1000.0/1000.0];
+    
+}
+-(void)clearAllCache{
+   //删除整个cache 文件夹
+    NSString *filePath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) lastObject];
+    [[NSFileManager defaultManager]removeItemAtPath:filePath error:nil];
+    JWLog(@"%@",NSHomeDirectory());
+    JWLog(@"%.02f",filePath.fileSize);
 }
 
+-(void)clearImageCache{
+    //仅仅删除图片缓存
+    [[SDImageCache sharedImageCache]clearDisk];
+     self.navigationItem.title = [NSString stringWithFormat:@"缓存文件(%.2fM)",([SDImageCache sharedImageCache].getSize)/1000.0/1000.0];
+}
 -(void)setting{
     Test1ViewController *test1 = [[Test1ViewController alloc]init];
     [self.navigationController pushViewController:test1 animated:YES];

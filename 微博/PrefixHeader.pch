@@ -26,6 +26,7 @@
 #import "NSDate+Extension.h"
 #import "MBProgressHUD+MJ.h"
 #import "WBButton.h"
+#import "NSString+Extension.h"
 #import "NSString+Emoji.h"
 #import "UIImage+Extension.h"
 #import "UITextView+Extension.h"

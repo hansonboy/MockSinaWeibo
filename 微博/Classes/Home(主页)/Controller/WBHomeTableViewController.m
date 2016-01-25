@@ -5,7 +5,13 @@
 //  Created by wangjianwei on 15/12/9.
 //  Copyright © 2015年 JW. All rights reserved.
 //
-
+#warning TODO 清除缓存还没有做呢
+/**
+ *  1.清除缓存
+ *  2.MJRefresh的使用
+ *  3.给文件夹下的文件统一改名字
+ *
+ */
 #import "WBHomeTableViewController.h"
 #import "WBPopMenu.h"
 #import "WBTestTableViewController.h"
