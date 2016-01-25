@@ -123,7 +123,9 @@
 -(void)setupTableView{
     self.tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     self.tableView.backgroundColor = color(217, 217, 217);
-//    self.tableView.sectionFooterHeight = 30;
+    self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+    self.tableView.contentInset = UIEdgeInsetsMake(-30, 0, 0, 0);
+    //    self.tableView.sectionFooterHeight = 30;
 //    self.tableView.sectionHeaderHeight = 0;
 }
 -(void)setupRefreshControl{
@@ -214,7 +216,7 @@
         //2.不存在旧数据，去网络请求旧数据
         NSString *urlStr = [NSString stringWithFormat:@"https://api.weibo.com/2/statuses/home_timeline.json?access_token=%@&max_id=%@",account.access_token,firstStatusF.status.idstr];
         [HttpTool get:urlStr params:nil success:^(id responseObject) {
-            btn.selected = NO;
+//            btn.selected = NO;
             [self loadOldStatuses:oldStatuses];
             [WBStatusTool saveStatuses:responseObject[@"statuses"]];
         } failure:^(NSError *error) {

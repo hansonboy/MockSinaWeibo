@@ -56,6 +56,7 @@ static FMDatabase* _db;
     }
     return statuses.count > 0?statuses:nil;
 }
+//可以保存status 数组，但是我们没有保存status 数组，这是因为status 数组在后面已经被处理过了，不是原来的数据了，我们保存原来的数据，反而更加简单些
 +(void)saveStatuses:(NSArray *)statuses{
     for (NSDictionary *status  in statuses) {
         NSData *data = [NSKeyedArchiver archivedDataWithRootObject:status];

@@ -17,7 +17,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    UIBarButtonItem * item= [[UIBarButtonItem alloc]initWithTitle:@"清除缓存" style:UIBarButtonItemStylePlain target:self action:@selector(clearAllCache)];
+    UIBarButtonItem * item= [[UIBarButtonItem alloc]initWithTitle:@"清除缓存" style:UIBarButtonItemStylePlain target:self action:@selector(clearImageCache)];
     self.navigationItem.rightBarButtonItem = item;
     
     self.navigationItem.title = [NSString stringWithFormat:@"缓存文件(%.2fM)",([SDImageCache sharedImageCache].getSize)/1000.0/1000.0];

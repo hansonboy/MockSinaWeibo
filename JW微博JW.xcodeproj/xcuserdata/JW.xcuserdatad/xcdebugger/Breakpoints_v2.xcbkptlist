@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x5fae;&#x535a;/Classes/Home(&#x4e3b;&#x9875;)/Model/WBStatusTool.m"
-            timestampString = "475148823.187869"
+            timestampString = "475435687.892858"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "61"
-            endingLineNumber = "61"
+            startingLineNumber = "62"
+            endingLineNumber = "62"
             landmarkName = "+saveStatuses:"
             landmarkType = "5">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x5fae;&#x535a;/Classes/Home(&#x4e3b;&#x9875;)/Controller/WBHomeTableViewController.m"
-            timestampString = "475432502.141704"
+            timestampString = "475434741.707155"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "250"
-            endingLineNumber = "250"
+            startingLineNumber = "252"
+            endingLineNumber = "252"
             landmarkName = "-refreshControlValueChanged:"
             landmarkType = "5">
          </BreakpointContent>
@@ -74,11 +74,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x5fae;&#x535a;/Classes/Home(&#x4e3b;&#x9875;)/Controller/WBHomeTableViewController.m"
-            timestampString = "475432502.141704"
+            timestampString = "475434741.707155"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "221"
-            endingLineNumber = "221"
+            startingLineNumber = "223"
+            endingLineNumber = "223"
             landmarkName = "-footerClick:"
             landmarkType = "5">
          </BreakpointContent>
@@ -90,11 +90,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "&#x5fae;&#x535a;/Classes/Home(&#x4e3b;&#x9875;)/Controller/WBHomeTableViewController.m"
-            timestampString = "475432502.141704"
+            timestampString = "475434741.707155"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "214"
-            endingLineNumber = "214"
+            startingLineNumber = "216"
+            endingLineNumber = "216"
             landmarkName = "-footerClick:"
             landmarkType = "5">
          </BreakpointContent>
@@ -112,6 +112,22 @@
             startingLineNumber = "27"
             endingLineNumber = "27"
             landmarkName = "-clearAllCache"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "&#x5fae;&#x535a;/Classes/Home(&#x4e3b;&#x9875;)/Controller/WBHomeTableViewController.m"
+            timestampString = "475434978.15784"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "219"
+            endingLineNumber = "219"
+            landmarkName = "-footerClick:"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

@@ -41,7 +41,7 @@
      *  设置原创微博相关frame
      */
     CGFloat avatarViewX = kBorderW;
-    CGFloat avatarViewY = kBorderW + kBorderW;
+    CGFloat avatarViewY = kBorderW;
     CGFloat avatarViewWH = kAvatarWH;
     _avatarViewF = CGRectMake(avatarViewX, avatarViewY, avatarViewWH, avatarViewWH);
     
@@ -88,7 +88,7 @@
     }
     
     CGFloat originalViewX = 0;
-    CGFloat originalViewY = 0;
+    CGFloat originalViewY = kBorderW ;
     CGFloat originalViewW = kScreenW;
     _originalViewF = CGRectMake(originalViewX, originalViewY, originalViewW, originalViewH);
     

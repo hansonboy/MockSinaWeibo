@@ -49,6 +49,7 @@
 -(instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier{
     if(self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]){
         self.contentView.backgroundColor = [UIColor clearColor];
+        self.backgroundColor = [UIColor clearColor];
         
         [self setupOriginal];
         
@@ -63,7 +64,6 @@
     static NSString *identifier = @"WBStatusCell";
     WBStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil) {
-        cell.backgroundColor = [UIColor clearColor];
         cell = [[self alloc]initWithStyle:style reuseIdentifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
@@ -75,6 +75,7 @@
 -(void)setupToolbar
 {
     WBToolbar * toolbar = [[WBToolbar alloc]init];
+    toolbar.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:toolbar];
     _toolbar = toolbar;
 }
@@ -103,7 +104,7 @@
  */
 -(void)setupOriginal{
     UIView *orignalView = [[UIView alloc]init];
-//    orignalView.backgroundColor = [UIColor redColor];
+    orignalView.backgroundColor = [UIColor whiteColor];
     [self.contentView addSubview:orignalView];
     _originalView = orignalView;
     

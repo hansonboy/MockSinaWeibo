@@ -22,7 +22,8 @@
     return _btns;
 }
 +(instancetype)toolbar{
-    return [[self alloc]init];
+    WBToolbar *toolbar = [[self alloc]init];
+    return toolbar;
 }
 -(instancetype)initWithFrame:(CGRect)frame{
     if (self = [super initWithFrame:frame]) {
