@@ -5,12 +5,8 @@
 //  Created by wangjianwei on 15/12/9.
 //  Copyright © 2015年 JW. All rights reserved.
 //
-#warning TODO 清除缓存还没有做呢
 /**
- *  1.清除缓存
  *  2.MJRefresh的使用
- *  3.给文件夹下的文件统一改名字
- *
  */
 #import "WBHomeTableViewController.h"
 #import "WBPopMenu.h"
@@ -61,22 +57,6 @@
     return _notifyHeader;
 }
 #warning  开始没有菊花旋转 TODO
--(void)setUser:(WBUser *)user{
-    _user = user;
-//    JWLog(@"收到用户信息了");
-    //收到用户消息后去加载用户主页的微博动态
-    
-    self.refreshControl.frame = CGRectMake(0, -87, 320, 60);
-//    self.refreshControl.backgroundColor = [UIColor yellowColor];
-    self.refreshControl.hidden = NO;
-    [self.refreshControl beginRefreshing];
-    if (self.refreshControl.isRefreshing) {
-//        JWLog(@"转起来了");
-    }
-    [self refreshControlValueChanged:self.refreshControl];
-    
-    [self setupTitleView];
-}
 -(NSMutableArray *)statusFM{
     if (_statusFM == nil) {
         _statusFM = [NSMutableArray array];
@@ -93,12 +73,11 @@
 //    JWLog();
     [super viewDidLoad];
     
-
     [self setupNavigationItem];
     
-    [self setupRefreshControl];
-    
     [self setupTableView];
+    
+    [self setupRefreshControl];
     
     [self getUserInfo];
     
@@ -143,12 +122,11 @@
     self.tableView.backgroundColor = color(217, 217, 217);
     self.tableView.sectionFooterHeight = 30;
     self.tableView.sectionHeaderHeight = 0;
-    
 }
 -(void)setupRefreshControl{
     self.refreshControl = [[UIRefreshControl alloc]init];
-    self.refreshControl.hidden = NO;
     [self.refreshControl addTarget:self action:@selector(refreshControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+    [self.refreshControl beginRefreshing];
 }
 /**
  *  获取用户的信息
@@ -162,6 +140,8 @@
     [HttpTool get:urlStr params:nil
         success:^(id responseObject) {
             self.user = [WBUser mj_objectWithKeyValues:responseObject];
+            [self refreshControlValueChanged:self.refreshControl];
+            [self setupTitleView];
             account.screen_name = self.user.screen_name;
             [WBAccountTool saveAccount:account];
         } failure:^(NSError *error) {
@@ -253,11 +233,7 @@
  *  @param refreshControl 下拉刷新获取微博
  */
 -(void)refreshControlValueChanged:(UIRefreshControl*)refreshControl{
-//    JWLog(@"正在加载中哦");
-//     JWLog(@"%@",refreshControl);
-    if (refreshControl.isRefreshing == NO) {
-        [refreshControl beginRefreshing];
-    }
+    JWLog(@"正在加载中哦");
 //    [self loadFakeStatuses];
     WBAccount *account = [WBAccountTool account];
     WBStatusFrame *lastStatusF = self.statusFM.firstObject;
@@ -333,6 +309,8 @@
 }
 
 -(void)frendSearch{
+    JWLog(@"%@",self.refreshControl);
+    [self.refreshControl beginRefreshing];
     JWLog();
 }
 -(void)pop{
