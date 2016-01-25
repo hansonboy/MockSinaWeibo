@@ -5,9 +5,6 @@
 //  Created by wangjianwei on 15/12/9.
 //  Copyright © 2015年 JW. All rights reserved.
 //
-/**
- *  2.MJRefresh的使用
- */
 #import "WBHomeTableViewController.h"
 #import "WBPopMenu.h"
 #import "WBTestTableViewController.h"
@@ -18,6 +15,7 @@
 #import "WBStatusFrame.h"
 #import "WBStatusCell.h"
 #import "WBStatusTool.h"
+#import "MJRefresh.h"
 @interface WBHomeTableViewController ()<WBPopMenuDelegate>
 @property (strong,nonatomic)NSMutableArray *statusFM;
 /**
@@ -25,22 +23,22 @@
  */
 @property (strong,nonatomic)WBUser *user;
 @property (strong,nonatomic)UILabel *notifyHeader;
-@property (strong,nonatomic)UIButton *footerLoadMoreBtn;
+//@property (strong,nonatomic)UIButton *footerLoadMoreBtn;
 @end
 
 @implementation WBHomeTableViewController
 #pragma mark - 属性
--(UIButton *)footerLoadMoreBtn{
-    if (_footerLoadMoreBtn == nil) {
-        _footerLoadMoreBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.view.width, 30)];
-        _footerLoadMoreBtn.backgroundColor = [UIColor redColor];
-        [_footerLoadMoreBtn addTarget:self action:@selector(footerClick:) forControlEvents:UIControlEventTouchUpInside];
-        [_footerLoadMoreBtn setTitle:@"加载更多" forState:UIControlStateNormal];
-        [_footerLoadMoreBtn setTitle:@"正在加载中" forState:UIControlStateSelected];
-        [_footerLoadMoreBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    }
-    return _footerLoadMoreBtn;
-}
+//-(UIButton *)footerLoadMoreBtn{
+//    if (_footerLoadMoreBtn == nil) {
+//        _footerLoadMoreBtn = [[UIButton alloc]initWithFrame:CGRectMake(0, 0, self.view.width, 30)];
+//        _footerLoadMoreBtn.backgroundColor = [UIColor redColor];
+//        [_footerLoadMoreBtn addTarget:self action:@selector(footerClick:) forControlEvents:UIControlEventTouchUpInside];
+//        [_footerLoadMoreBtn setTitle:@"加载更多" forState:UIControlStateNormal];
+//        [_footerLoadMoreBtn setTitle:@"正在加载中" forState:UIControlStateSelected];
+//        [_footerLoadMoreBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+//    }
+//    return _footerLoadMoreBtn;
+//}
 
 -(UILabel *)notifyHeader{
     if (_notifyHeader == nil) {
@@ -63,14 +61,8 @@
     }
     return _statusFM;
 }
-#pragma mark - 页面即将显示
--(void)viewWillAppear:(BOOL)animated{
-    [super viewWillAppear:animated];
-//    JWLog(@"%@",self.tableView.tableFooterView);
-}
 #pragma mark - 初始化
 - (void)viewDidLoad {
-//    JWLog();
     [super viewDidLoad];
     
     [self setupNavigationItem];
@@ -82,6 +74,19 @@
     [self getUserInfo];
     
 }
+-(void)viewWillAppear:(BOOL)animated{
+    JWLog(@"%@--%@",NSStringFromCGPoint(self.tableView.contentOffset),NSStringFromUIEdgeInsets(self.tableView.contentInset));
+}
+-(void)viewWillLayoutSubviews{
+    JWLog();
+}
+-(void)viewDidLayoutSubviews{
+    JWLog();
+}
+-(void)viewWillDisappear:(BOOL)animated{
+    JWLog();
+}
+
 /**
  *  清除未读数目
  */
@@ -103,7 +108,6 @@
  *  获取用户未读微博的数目
  */
 -(void)getUnreadCount{
-//    JWLog();
     //   https://rm.api.weibo.com/2/remind/unread_count.json
  
   
@@ -111,7 +115,6 @@
     NSString *urlStr = [NSString stringWithFormat:@"https://rm.api.weibo.com/2/remind/unread_count.json?access_token=%@&uid=%@",account.access_token,account.uid];
     
     [HttpTool get:urlStr params:nil success:^(id responseObject) {
-        //        JWLog(@"未读数目:%@",responseObject);
         [self setBadgeNumber:responseObject[@"status"]];
     } failure:^(NSError *error) {
          JWLog(@"%@",error);
@@ -120,13 +123,16 @@
 -(void)setupTableView{
     self.tableView = [[UITableView alloc]initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     self.tableView.backgroundColor = color(217, 217, 217);
-    self.tableView.sectionFooterHeight = 30;
-    self.tableView.sectionHeaderHeight = 0;
+//    self.tableView.sectionFooterHeight = 30;
+//    self.tableView.sectionHeaderHeight = 0;
 }
 -(void)setupRefreshControl{
-    self.refreshControl = [[UIRefreshControl alloc]init];
-    [self.refreshControl addTarget:self action:@selector(refreshControlValueChanged:) forControlEvents:UIControlEventValueChanged];
-    [self.refreshControl beginRefreshing];
+    [self.tableView addHeaderWithTarget:self action:@selector(refreshControlValueChanged:)];
+    [self.tableView headerBeginRefreshing];
+    [self.tableView addFooterWithTarget:self action:@selector(footerClick:)];
+    //    self.refreshControl = [[UIRefreshControl alloc]init];
+//    [self.refreshControl addTarget:self action:@selector(refreshControlValueChanged:) forControlEvents:UIControlEventValueChanged];
+//    [self.refreshControl beginRefreshing];
 }
 /**
  *  获取用户的信息
@@ -140,7 +146,6 @@
     [HttpTool get:urlStr params:nil
         success:^(id responseObject) {
             self.user = [WBUser mj_objectWithKeyValues:responseObject];
-            [self refreshControlValueChanged:self.refreshControl];
             [self setupTitleView];
             account.screen_name = self.user.screen_name;
             [WBAccountTool saveAccount:account];
@@ -148,8 +153,8 @@
              JWLog(@"%@",error);
         }];
     /** 获取未读更新微博数目*/
-//    NSTimer *timer = [NSTimer timerWithTimeInterval:60 target:self selector:@selector(getUnreadCount) userInfo:nil repeats:YES];
-//    [[NSRunLoop mainRunLoop]addTimer:timer forMode:NSRunLoopCommonModes];
+    NSTimer *timer = [NSTimer timerWithTimeInterval:60 target:self selector:@selector(getUnreadCount) userInfo:nil repeats:YES];
+    [[NSRunLoop mainRunLoop]addTimer:timer forMode:NSRunLoopCommonModes];
     
 }
 
@@ -197,8 +202,8 @@
  *  点击加载更多请求数据
  */
 -(void)footerClick:(UIButton*)btn{
-    btn.selected = YES;
-//    JWLog(@"正在加载中哦");
+    [self.tableView footerEndRefreshing];
+//    btn.selected = YES;
     WBAccount *account = [WBAccountTool account];
     WBStatusFrame *firstStatusF = self.statusFM.lastObject;
     //1.先从数据库中加载旧数据
@@ -248,7 +253,7 @@
             [WBStatusTool saveStatuses:responseObject[@"statuses"]];
             [self loadNewStatuses:responseObject[@"statuses"]];
         } failure:^(NSError *error) {
-            [refreshControl endRefreshing];
+            [self.tableView headerEndRefreshing];
             JWLog(@"%@",error);
         }];
     }
@@ -267,7 +272,8 @@
 }
 //为tableView加载新数据
 -(void)loadNewStatuses:(NSArray*)statuses{
-    [self.refreshControl endRefreshing];
+    [self.tableView headerEndRefreshing];
+//    [self.refreshControl endRefreshing];
     //将字典数组保存为对象数组
     NSMutableArray *newStatuses = [WBStatus mj_objectArrayWithKeyValuesArray:statuses];
     NSMutableArray *newStatusFM = [WBStatusFrame arrayWithStatusArray:newStatuses];
@@ -309,8 +315,6 @@
 }
 
 -(void)frendSearch{
-    JWLog(@"%@",self.refreshControl);
-    [self.refreshControl beginRefreshing];
     JWLog();
 }
 -(void)pop{
@@ -337,37 +341,29 @@
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-//    static  NSString *identifier = @"WBTableViewCell";
-//    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-//    if (cell == nil) {
-//        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
-//    }
-//    cell.imageView.image = [UIImage imageWithData:[NSData dataWithContentsOfURL:[NSURL URLWithString:statusF.status.user.profile_image_url]]];
-//    cell.detailTextLabel.text = statusF.status.text;
-//    cell.textLabel.text = statusF.status.user.screen_name;
     WBStatusCell *cell = [WBStatusCell cellWithTableView:tableView style:UITableViewCellStyleSubtitle];
     WBStatusFrame *statusF = self.statusFM[indexPath.row];
     cell.statusF = statusF;
     return cell;
 }
--(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
-    if (self.statusFM.count== 0) {
-        return [[UIView alloc]initWithFrame:CGRectZero];
-    }
-    else return self.footerLoadMoreBtn;
-}
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
     return [self.statusFM[indexPath.row] height];
 }
+//-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+//    if (self.statusFM.count== 0) {
+//        return [[UIView alloc]initWithFrame:CGRectZero];
+//    }
+//    else return self.footerLoadMoreBtn;
+//}
 #pragma mark - Table view Delegate
 -(void)tableView:(UITableView *)tableView willDisplayFooterView:(UIView *)view forSection:(NSInteger)section{
     
-    if (self.statusFM.count != 0 ) {
-        [self footerClick:self.footerLoadMoreBtn];
-    }
+//    if (self.statusFM.count != 0 ) {
+//        [self footerClick:self.footerLoadMoreBtn];
+//    }
+    [self.tableView footerBeginRefreshing];
 }
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
-    JWLog(@"selected--%d",indexPath.row);
+    JWLog(@"selected--%ld",indexPath.row);
 }
 @end
-#warning 现在最后一条消息加载重复出现

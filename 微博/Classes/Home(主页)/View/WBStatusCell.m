@@ -63,6 +63,7 @@
     static NSString *identifier = @"WBStatusCell";
     WBStatusCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil) {
+        cell.backgroundColor = [UIColor clearColor];
         cell = [[self alloc]initWithStyle:style reuseIdentifier:identifier];
         cell.selectionStyle = UITableViewCellSelectionStyleNone;
     }
